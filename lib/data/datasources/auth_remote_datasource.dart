@@ -1,8 +1,8 @@
 import 'package:dartz/dartz.dart';
+import 'package:http/http.dart' as http;
 import 'package:kopinale/core/constants/variables.dart';
 import 'package:kopinale/data/datasources/auth_local_datasource.dart';
 import 'package:kopinale/data/models/responses/login/auth_response_model.dart';
-import 'package:http/http.dart' as http;
 
 class AuthRemoteDatasource {
   Future<Either<String, AuthResponseModel>> login(

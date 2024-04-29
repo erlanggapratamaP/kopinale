@@ -3,9 +3,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:kopinale/core/constants/colors.dart';
 import 'package:kopinale/core/router/app_router.dart';
+import 'package:kopinale/data/datasources/address_remote_datasource.dart';
 import 'package:kopinale/data/datasources/auth_remote_datasource.dart';
 import 'package:kopinale/data/datasources/category_remote_datasource.dart';
 import 'package:kopinale/data/datasources/product_remote_datasource.dart';
+import 'package:kopinale/presentation/address/bloc/add_address/add_address_bloc.dart';
+import 'package:kopinale/presentation/address/bloc/address/address_bloc.dart';
 import 'package:kopinale/presentation/auth/bloc/login/login_bloc.dart';
 import 'package:kopinale/presentation/auth/bloc/logout/logout_bloc.dart';
 import 'package:kopinale/presentation/home/bloc/all_product/all_product_bloc.dart';
@@ -58,6 +61,12 @@ class MyApp extends StatelessWidget {
         ),
         BlocProvider(
           create: (context) => LogoutBloc(AuthRemoteDatasource()),
+        ),
+        BlocProvider(
+          create: (context) => AddressBloc(AddressRemoteDatasource()),
+        ),
+        BlocProvider(
+          create: (context) => AddAddressBloc(AddressRemoteDatasource()),
         )
       ],
       child: MaterialApp.router(

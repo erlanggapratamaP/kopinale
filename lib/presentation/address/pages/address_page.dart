@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:kopinale/presentation/address/bloc/address/address_bloc.dart';
 
 import '../../../core/components/buttons.dart';
 import '../../../core/components/spaces.dart';
@@ -8,34 +10,46 @@ import '../../../core/router/app_router.dart';
 import '../models/address_model.dart';
 import '../widgets/address_tile.dart';
 
-class AddressPage extends StatelessWidget {
+class AddressPage extends StatefulWidget {
   const AddressPage({super.key});
 
   @override
+  State<AddressPage> createState() => _AddressPageState();
+}
+
+class _AddressPageState extends State<AddressPage> {
+  final List<AddressModel> addresses = [
+    AddressModel(
+      country: 'Indonesia',
+      firstName: 'Elang',
+      lastName: 'Pratama',
+      address: 'Jl. Merdeka No. 123',
+      city: 'Jakarta Selatan',
+      province: 'DKI Jakarta',
+      zipCode: 12345,
+      phoneNumber: '08123456789',
+      isPrimary: true,
+    ),
+    AddressModel(
+      country: 'Indonesia',
+      firstName: 'Elang',
+      lastName: '',
+      address: 'Jl. Cendrawasih No. 456',
+      city: 'Bandung',
+      province: 'Jawa Barat',
+      zipCode: 67890,
+      phoneNumber: '08987654321',
+    ),
+  ];
+
+  @override
+  void initState() {
+    super.initState();
+    context.read<AddressBloc>().add(const AddressEvent.getAddresses());
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final List<AddressModel> addresses = [
-      AddressModel(
-        country: 'Indonesia',
-        firstName: 'Elang',
-        lastName: 'Pratama',
-        address: 'Jl. Merdeka No. 123',
-        city: 'Jakarta Selatan',
-        province: 'DKI Jakarta',
-        zipCode: 12345,
-        phoneNumber: '08123456789',
-        isPrimary: true,
-      ),
-      AddressModel(
-        country: 'Indonesia',
-        firstName: 'Elang',
-        lastName: '',
-        address: 'Jl. Cendrawasih No. 456',
-        city: 'Bandung',
-        province: 'Jawa Barat',
-        zipCode: 67890,
-        phoneNumber: '08987654321',
-      ),
-    ];
     int selectedIndex = addresses.indexWhere((element) => element.isPrimary);
 
     return Scaffold(
@@ -65,30 +79,36 @@ class AddressPage extends StatelessWidget {
             ),
           ),
           const SpaceHeight(20.0),
-          StatefulBuilder(
-            builder: (context, setState) => ListView.separated(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              itemCount: addresses.length,
-              itemBuilder: (context, index) => AddressTile(
-                isSelected: selectedIndex == index,
-                data: addresses[index],
-                onTap: () {
-                  selectedIndex = index;
-                  setState(() {});
-                },
-                onEditTap: () {
-                  context.goNamed(
-                    RouteConstants.editAddress,
-                    pathParameters: PathParameters(
-                      rootTab: RootTab.order,
-                    ).toMap(),
-                    extra: addresses[index],
-                  );
-                },
-              ),
-              separatorBuilder: (context, index) => const SpaceHeight(16.0),
-            ),
+          BlocBuilder<AddressBloc, AddressState>(
+            builder: (context, state) {
+              return state.maybeWhen(
+                loading: () => const CircularProgressIndicator(),
+                loaded: (addresses) => ListView.separated(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemCount: addresses.length,
+                  itemBuilder: (context, index) => AddressTile(
+                    isSelected: false,
+                    data: addresses[index],
+                    onTap: () {
+                      // selectedIndex = index;
+                      // setState(() {});
+                    },
+                    onEditTap: () {
+                      context.goNamed(
+                        RouteConstants.editAddress,
+                        pathParameters: PathParameters(
+                          rootTab: RootTab.order,
+                        ).toMap(),
+                        extra: addresses[index],
+                      );
+                    },
+                  ),
+                  separatorBuilder: (context, index) => const SpaceHeight(16.0),
+                ),
+                orElse: () => const SizedBox.shrink(),
+              );
+            },
           ),
           const SpaceHeight(40.0),
           Button.outlined(

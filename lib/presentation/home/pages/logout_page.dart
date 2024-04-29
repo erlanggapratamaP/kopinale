@@ -27,6 +27,7 @@ class _LogoutPageState extends State<LogoutPage> {
                 error: (message) {
                   context.goNamed(
                     RouteConstants.login,
+                    // pathParameters: PathParameters().toMap(),
                   );
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(

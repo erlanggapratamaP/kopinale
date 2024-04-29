@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-
+import 'package:kopinale/data/models/responses/address/address.dart';
 
 import '../../../core/components/spaces.dart';
 import '../../../core/core.dart';
@@ -7,7 +7,7 @@ import '../models/address_model.dart';
 
 class AddressTile extends StatelessWidget {
   final bool isSelected;
-  final AddressModel data;
+  final Address data;
   final VoidCallback onTap;
   final VoidCallback onEditTap;
 
@@ -45,7 +45,7 @@ class AddressTile extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
               child: Text(
-                '${data.fullName} - ${data.primaryAddressText}',
+                '${data.name} - ${data.phone}',
                 style: const TextStyle(
                   fontSize: 16,
                 ),
@@ -59,7 +59,7 @@ class AddressTile extends StatelessWidget {
                 children: [
                   Flexible(
                     child: Text(
-                      data.fullAddress,
+                      '${data.fullAddress}',
                       style: const TextStyle(
                         fontSize: 16,
                       ),
