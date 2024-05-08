@@ -2,13 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:kopinale/presentation/address/bloc/address/address_bloc.dart';
+import 'package:kopinale/presentation/address/widgets/address_list.dart';
+import 'package:kopinale/presentation/address/widgets/address_list_loading.dart';
 
 import '../../../core/components/buttons.dart';
 import '../../../core/components/spaces.dart';
 import '../../../core/core.dart';
 import '../../../core/router/app_router.dart';
 import '../models/address_model.dart';
-import '../widgets/address_tile.dart';
 
 class AddressPage extends StatefulWidget {
   const AddressPage({super.key});
@@ -50,7 +51,7 @@ class _AddressPageState extends State<AddressPage> {
 
   @override
   Widget build(BuildContext context) {
-    int selectedIndex = addresses.indexWhere((element) => element.isPrimary);
+    // int selectedIndex = addresses.indexWhere((element) => element.isPrimary);
 
     return Scaffold(
       appBar: AppBar(
@@ -82,29 +83,9 @@ class _AddressPageState extends State<AddressPage> {
           BlocBuilder<AddressBloc, AddressState>(
             builder: (context, state) {
               return state.maybeWhen(
-                loading: () => const CircularProgressIndicator(),
-                loaded: (addresses) => ListView.separated(
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  itemCount: addresses.length,
-                  itemBuilder: (context, index) => AddressTile(
-                    isSelected: false,
-                    data: addresses[index],
-                    onTap: () {
-                      // selectedIndex = index;
-                      // setState(() {});
-                    },
-                    onEditTap: () {
-                      context.goNamed(
-                        RouteConstants.editAddress,
-                        pathParameters: PathParameters(
-                          rootTab: RootTab.order,
-                        ).toMap(),
-                        extra: addresses[index],
-                      );
-                    },
-                  ),
-                  separatorBuilder: (context, index) => const SpaceHeight(16.0),
+                loading: () => const AddressListLoading(),
+                loaded: (addresses) => AddressList(
+                  addresses: addresses,
                 ),
                 orElse: () => const SizedBox.shrink(),
               );

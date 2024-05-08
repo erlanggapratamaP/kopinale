@@ -1,13 +1,28 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:kopinale/data/models/responses/provience/provience.dart';
+import 'package:kopinale/presentation/address/bloc/city/city_bloc.dart';
+import 'package:kopinale/presentation/address/bloc/provience/provience_bloc.dart';
 
 import '../../../core/components/buttons.dart';
 import '../../../core/components/custom_dropdown.dart';
 import '../../../core/components/custom_text_field.dart';
 import '../../../core/components/spaces.dart';
 
-class AddAddressPage extends StatelessWidget {
+class AddAddressPage extends StatefulWidget {
   const AddAddressPage({super.key});
+
+  @override
+  State<AddAddressPage> createState() => _AddAddressPageState();
+}
+
+class _AddAddressPageState extends State<AddAddressPage> {
+  @override
+  void initState() {
+    super.initState();
+    context.read<ProvienceBloc>().add(const ProvienceEvent.getProvinces());
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -36,6 +51,35 @@ class AddAddressPage extends StatelessWidget {
             label: 'Alamat jalan',
           ),
           const SpaceHeight(24.0),
+          BlocBuilder<ProvienceBloc, ProvienceState>(
+            builder: (context, state) {
+              return state.maybeWhen(
+                orElse: () => const Center(
+                  child: CircularProgressIndicator(),
+                ),
+                loaded: (provinces) => CustomDropdown<Provience>(
+                  value: provinces.first,
+                  items: provinces,
+                  label: 'Provinsi',
+                  onChanged: (value) {
+                    context.read<CityBloc>().add(CityEvent.getCitiesByProvience(
+                        value?.provinceId ?? ""));
+                  },
+                ),
+              );
+            },
+          ),
+          BlocBuilder<CityBloc, CityState>(
+            builder: (context, state) {
+              return state.maybeWhen(
+                orElse: () => const Center(
+                  child: CircularProgressIndicator(),
+                ),
+                loaded: (cities) => CustomDropdown(
+                    value: cities.first, items: cities, label: 'City'),
+              );
+            },
+          ),
           CustomTextField(
             controller: cityController,
             label: 'Kota',

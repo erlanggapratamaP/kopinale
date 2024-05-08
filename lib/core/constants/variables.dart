@@ -1,7 +1,7 @@
 class Variables {
-  static const String baseUrl = 'http://192.168.52.103:8000/api';
+  static const String baseUrl = 'http://192.168.52.101:8000/api';
 
   static const String baseUrlImage = '$baseUrl/storage/products/';
 
-  static const String rajaOngkirKey = 'a9da3c4359fafde97f03ee2be60147b2';
+  static const String rajaOngkirKey = '99e21a17cdf3b69438d55663f51ef6f0';
 }

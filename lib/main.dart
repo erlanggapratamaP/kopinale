@@ -7,8 +7,11 @@ import 'package:kopinale/data/datasources/address_remote_datasource.dart';
 import 'package:kopinale/data/datasources/auth_remote_datasource.dart';
 import 'package:kopinale/data/datasources/category_remote_datasource.dart';
 import 'package:kopinale/data/datasources/product_remote_datasource.dart';
+import 'package:kopinale/data/datasources/rajaongkir_remote_datasource.dart';
 import 'package:kopinale/presentation/address/bloc/add_address/add_address_bloc.dart';
 import 'package:kopinale/presentation/address/bloc/address/address_bloc.dart';
+import 'package:kopinale/presentation/address/bloc/city/city_bloc.dart';
+import 'package:kopinale/presentation/address/bloc/provience/provience_bloc.dart';
 import 'package:kopinale/presentation/auth/bloc/login/login_bloc.dart';
 import 'package:kopinale/presentation/auth/bloc/logout/logout_bloc.dart';
 import 'package:kopinale/presentation/home/bloc/all_product/all_product_bloc.dart';
@@ -67,6 +70,12 @@ class MyApp extends StatelessWidget {
         ),
         BlocProvider(
           create: (context) => AddAddressBloc(AddressRemoteDatasource()),
+        ),
+        BlocProvider(
+          create: (context) => ProvienceBloc(RajaongkirRemotedatasource()),
+        ),
+        BlocProvider(
+          create: (context) => CityBloc(RajaongkirRemotedatasource()),
         )
       ],
       child: MaterialApp.router(
